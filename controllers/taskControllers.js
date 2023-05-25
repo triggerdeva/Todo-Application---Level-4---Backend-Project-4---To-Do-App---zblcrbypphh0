@@ -137,6 +137,30 @@ the latest data will be at the top.
 const getallTask = async (req, res) => {
 
     //Write your code here.
+    const status = req.query.status;
+    const token = req.body.token;
+    const decodedToken = jwt.verify(token,JWT_SECRET);
+    const user_id = decodedToken.userId;
+    const role = decodedToken.role;
+
+    const obj={};
+    if(role == 'user'){
+        obj['creator_id'] = user_id;
+    }
+    if(status){
+        obj['status'] = status;
+    }
+
+
+
+    const task = await Tasks.find(obj).sort({_id:-1});
+
+    res.status(200).json({
+        status:'success',
+        data:task
+    })
+
+
 }
 
 
